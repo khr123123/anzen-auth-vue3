@@ -1,5 +1,5 @@
 ﻿<template>
-    <a-row justify="center" style="height: 100vh; background: #f5f5f5;">
+    <a-row justify="center" style=" background: #f5f5f5;">
         <a-col :span="12">
             <a-card title="Login" bordered>
                 <a-form :model="form" :rules="rules" ref="loginForm" labelAlign="left">

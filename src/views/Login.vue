@@ -123,7 +123,7 @@ const handleSubmit = async () => {
             // 3. 获取菜单信息
             const menuRes = await getRouters()
             if (menuRes.code === 0) {
-                menuStore.setMenusFromFlat(menuRes.data) // 构建树并存储
+                menuStore.setMenus(menuRes.data) // 构建树并存储
             }
 
             setTimeout(() => {

@@ -1,16 +1,18 @@
 ﻿import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
+import { useTokenStore } from '@/store/tokenStore'
 
 // 创建 axios 实例
 const request: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || '/api', //后端地址
     timeout: 10000,
+    withCredentials: true
 })
 
 // 请求拦截器
 request.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        // 从 localStorage/sessionStorage/Pinia/Vuex 获取 token
-        const token = localStorage.getItem('token')
+        const tokenStore = useTokenStore()
+        let token = tokenStore.token
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`
         }

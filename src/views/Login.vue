@@ -140,7 +140,7 @@ const handleSubmit = async () => {
 }
 
 const onForgot = () => {
-    Message.info('请联系管理员或使用找回密码流程')
+    Message.info({ id: 'forgot', content: '请联系管理员重置密码' })
 }
 </script>
 

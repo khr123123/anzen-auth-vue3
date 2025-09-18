@@ -8,6 +8,7 @@
             </p>
         </div>
     </div>
+    <div v-hasRole="['sub_admin']">FUCK</div>
 </template>
 <script setup lang="ts">
 </script>

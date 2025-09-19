@@ -53,7 +53,7 @@
 import { reactive, ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import type { FormInstance } from '@arco-design/web-vue'
-import { getLoginUserInfo, getRouters, userLogin } from '@/api/sysUserController'
+import { getLoginUserInfo, getUserRouters, loginUser } from '@/api/sysUserController'
 import { useUserStore } from '@/store/userStore'
 import { useMenuStore } from '@/store/menuStore'
 import { useTokenStore } from '@/store/tokenStore'
@@ -111,7 +111,7 @@ const handleSubmit = async () => {
 
     loading.value = true
     try {
-        const result = await userLogin(form)
+        const result = await loginUser(form)
         if (result.code === 0) {
             Message.success('登录成功')
             tokenStore.setToken(result.data) // 保存 token
@@ -121,11 +121,10 @@ const handleSubmit = async () => {
                 userStore.setUser(userRes.data) // 存到 Pinia
             }
             // 3. 获取菜单信息
-            const menuRes = await getRouters()
+            const menuRes = await getUserRouters()
             if (menuRes.code === 0) {
                 menuStore.setMenus(menuRes.data) // 构建树并存储
             }
-
             setTimeout(() => {
                 window.location.href = '/'
             }, 1000)

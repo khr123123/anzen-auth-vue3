@@ -10,7 +10,6 @@ import permissionDirective from "@/directive/hasPermi"
 //路由守卫
 import "./premission"
 
-
 const app = createApp(App);
 app.use(ArcoVue);
 app.use(ArcoVueIcon);

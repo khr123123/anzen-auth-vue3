@@ -2,35 +2,70 @@
 /* eslint-disable */
 import request from "@/utils/http.ts";
 
-/** 此处后端没有提供注释 GET /sysMenu/getInfo/${param0} */
-export async function getInfo2(
+/** 此处后端没有提供注释 DELETE /sysMenu/deleteMenu/${param0} */
+export async function deleteMenu(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getInfo2Params,
+  params: API.deleteMenuParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponseSysMenu>(`/sysMenu/getInfo/${param0}`, {
+  return request<API.BaseResponseBoolean>(`/sysMenu/deleteMenu/${param0}`, {
+    method: "DELETE",
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 GET /sysMenu/getMenuInfo/${param0} */
+export async function getMenuInfo(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getMenuInfoParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.BaseResponseSysMenu>(`/sysMenu/getMenuInfo/${param0}`, {
     method: "GET",
     params: { ...queryParams },
     ...(options || {}),
   });
 }
 
-/** 此处后端没有提供注释 GET /sysMenu/list */
-export async function list2(options?: { [key: string]: any }) {
-  return request<API.BaseResponseListSysMenu>("/sysMenu/list", {
+/** 此处后端没有提供注释 POST /sysMenu/getUserMenuTree */
+export async function getUserMenuTree(options?: { [key: string]: any }) {
+  return request<API.BaseResponseListSysMenu>("/sysMenu/getUserMenuTree", {
+    method: "POST",
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /sysMenu/getUserMenuTreeWithButton */
+export async function getUserMenuTreeWithButton(options?: {
+  [key: string]: any;
+}) {
+  return request<API.BaseResponseListSysMenu>(
+    "/sysMenu/getUserMenuTreeWithButton",
+    {
+      method: "POST",
+      ...(options || {}),
+    }
+  );
+}
+
+/** 此处后端没有提供注释 GET /sysMenu/listMenu */
+export async function listMenu(options?: { [key: string]: any }) {
+  return request<API.BaseResponseListSysMenu>("/sysMenu/listMenu", {
     method: "GET",
     ...(options || {}),
   });
 }
 
-/** 此处后端没有提供注释 GET /sysMenu/page */
-export async function page2(
+/** 此处后端没有提供注释 GET /sysMenu/pageMenu */
+export async function pageMenu(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.page2Params,
+  params: API.pageMenuParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageSysMenu>("/sysMenu/page", {
+  return request<API.BaseResponsePageSysMenu>("/sysMenu/pageMenu", {
     method: "GET",
     params: {
       ...params,
@@ -41,26 +76,12 @@ export async function page2(
   });
 }
 
-/** 此处后端没有提供注释 DELETE /sysMenu/remove/${param0} */
-export async function remove2(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.remove2Params,
-  options?: { [key: string]: any }
-) {
-  const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponseBoolean>(`/sysMenu/remove/${param0}`, {
-    method: "DELETE",
-    params: { ...queryParams },
-    ...(options || {}),
-  });
-}
-
-/** 此处后端没有提供注释 POST /sysMenu/save */
-export async function save2(
+/** 此处后端没有提供注释 POST /sysMenu/saveMenu */
+export async function saveMenu(
   body: API.SysMenu,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean>("/sysMenu/save", {
+  return request<API.BaseResponseBoolean>("/sysMenu/saveMenu", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -70,12 +91,12 @@ export async function save2(
   });
 }
 
-/** 此处后端没有提供注释 PUT /sysMenu/update */
-export async function update2(
+/** 此处后端没有提供注释 PUT /sysMenu/updateMenu */
+export async function updateMenu(
   body: API.SysMenu,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean>("/sysMenu/update", {
+  return request<API.BaseResponseBoolean>("/sysMenu/updateMenu", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

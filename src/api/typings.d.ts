@@ -77,15 +77,27 @@ declare namespace API {
     message?: string;
   };
 
-  type getInfo1Params = {
+  type deleteMenuParams = {
     id: number;
   };
 
-  type getInfo2Params = {
+  type deleteRoleParams = {
     id: number;
   };
 
-  type getInfoParams = {
+  type deleteUserParams = {
+    id: number;
+  };
+
+  type getMenuInfoParams = {
+    id: number;
+  };
+
+  type getRoleInfoParams = {
+    id: number;
+  };
+
+  type getUserInfoParams = {
     id: number;
   };
 
@@ -95,16 +107,12 @@ declare namespace API {
     roles?: string[];
   };
 
-  type page1Params = {
-    page: PageSysRole;
-  };
-
-  type page2Params = {
+  type pageMenuParams = {
     page: PageSysMenu;
   };
 
-  type pageParams = {
-    page: PageSysUser;
+  type pageRoleParams = {
+    page: PageSysRole;
   };
 
   type PageSysMenu = {
@@ -134,16 +142,8 @@ declare namespace API {
     optimizeCountQuery?: boolean;
   };
 
-  type remove1Params = {
-    id: number;
-  };
-
-  type remove2Params = {
-    id: number;
-  };
-
-  type removeParams = {
-    id: number;
+  type pageUserParams = {
+    page: PageSysUser;
   };
 
   type SysMenu = {
@@ -156,6 +156,7 @@ declare namespace API {
     menuType?: string;
     icon?: string;
     createTime?: string;
+    updateTime?: string;
     children?: SysMenu[];
   };
 
@@ -172,8 +173,11 @@ declare namespace API {
     username?: string;
     password?: string;
     nickname?: string;
+    avatar?: string;
+    email?: string;
     status?: string;
     createTime?: string;
+    updateTime?: string;
   };
 
   type testMenuPerms1Params = {

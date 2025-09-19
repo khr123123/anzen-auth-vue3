@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
             bindRoute(menuList)
             // 解析完毕后修改状态,防止请求频繁解析
             userStore.setHasRoutes(true)
-            next(to.path) // next({ path: '/index' }); // ----------解决刷新白屏问题
+            next(to.path)  //解决刷新白屏问题
         } else {
             next() // 放行
         }

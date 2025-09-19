@@ -5,6 +5,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListLong = {
+    code?: number;
+    data?: number[];
+    message?: string;
+  };
+
   type BaseResponseListSysMenu = {
     code?: number;
     data?: SysMenu[];
@@ -44,6 +50,12 @@ declare namespace API {
   type BaseResponsePageSysUser = {
     code?: number;
     data?: PageSysUser;
+    message?: string;
+  };
+
+  type BaseResponseSetLong = {
+    code?: number;
+    data?: number[];
     message?: string;
   };
 
@@ -97,8 +109,26 @@ declare namespace API {
     id: number;
   };
 
+  type getRolePermissionParams = {
+    id: number;
+  };
+
   type getUserInfoParams = {
     id: number;
+  };
+
+  type getUserRolesParams = {
+    id: number;
+  };
+
+  type grantPermissionParams = {
+    id: number;
+    permissions?: number[];
+  };
+
+  type grantRoleParams = {
+    id: number;
+    roles?: number[];
   };
 
   type LoginUserInfoVO = {

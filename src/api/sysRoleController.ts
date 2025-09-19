@@ -30,6 +30,39 @@ export async function getRoleInfo(
   });
 }
 
+/** 此处后端没有提供注释 GET /sysRole/getRolePermission/${param0} */
+export async function getRolePermission(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getRolePermissionParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.BaseResponseSetLong>(
+    `/sysRole/getRolePermission/${param0}`,
+    {
+      method: "GET",
+      params: { ...queryParams },
+      ...(options || {}),
+    }
+  );
+}
+
+/** 此处后端没有提供注释 POST /sysRole/grantRole/${param0} */
+export async function grantPermission(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.grantPermissionParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.BaseResponseBoolean>(`/sysRole/grantRole/${param0}`, {
+    method: "POST",
+    params: {
+      ...queryParams,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 GET /sysRole/listRole */
 export async function listRole(options?: { [key: string]: any }) {
   return request<API.BaseResponseListSysRole>("/sysRole/listRole", {

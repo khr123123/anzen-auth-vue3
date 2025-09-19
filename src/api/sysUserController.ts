@@ -38,10 +38,40 @@ export async function getUserInfo(
   });
 }
 
+/** 此处后端没有提供注释 GET /sysUser/getUserRoles/${param0} */
+export async function getUserRoles(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserRolesParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.BaseResponseListLong>(`/sysUser/getUserRoles/${param0}`, {
+    method: "GET",
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 GET /sysUser/getUserRouters */
 export async function getUserRouters(options?: { [key: string]: any }) {
   return request<API.BaseResponseListSysMenu>("/sysUser/getUserRouters", {
     method: "GET",
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /sysUser/grantRole/${param0} */
+export async function grantRole(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.grantRoleParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.BaseResponseBoolean>(`/sysUser/grantRole/${param0}`, {
+    method: "POST",
+    params: {
+      ...queryParams,
+    },
     ...(options || {}),
   });
 }

@@ -170,7 +170,7 @@ const openPermModal = async (record: API.SysRole) => {
 const convertBackendMenuToArco = (nodes: any[] = []): TreeNode[] =>
     nodes.map((n) => ({
         key: String(n.menuId),
-        title: n.menuName,
+        title: `${n.menuName}  (${n.menuType == "M" ? '目录' : n.menuType == "C" ? '菜单' : '按钮'})`,
         children: convertBackendMenuToArco(n.children || []),
         ...(n.perms ? { perms: n.perms } : {}),
     }))

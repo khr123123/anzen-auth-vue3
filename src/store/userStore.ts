@@ -14,7 +14,11 @@ export interface UserInfo {
 
 export const useUserStore = defineStore('user', () => {
     const user = ref<UserInfo | null>(null)
+    const hasRoutes = ref(false)
 
+    function setHasRoutes(value: boolean) {
+        hasRoutes.value = value
+    }
     function setUser(info: UserInfo) {
         user.value = info
         persist()
@@ -55,9 +59,11 @@ export const useUserStore = defineStore('user', () => {
 
     return {
         user,
+        hasRoutes,
         setUser,
         clearUser,
         hasRole,
         hasPermission,
+        setHasRoutes,
     }
 })

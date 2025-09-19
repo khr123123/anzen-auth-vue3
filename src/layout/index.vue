@@ -23,19 +23,22 @@
             <!-- 侧边栏 -->
             <a-layout-sider :collapsed="collapsed" :show-collapse-button="true" breakpoint="xl" @collapse="onCollapse">
                 <div class="menu-sider">
-                    <a-menu :style="{ width: '200px', height: '100%' }" @menu-item-click="handleSiderClick">
-                        <template v-for="item in menuStore.treeMenus" :key="item.menuId">
-                            <a-sub-menu v-if="item.children?.length" :key="item.menuId">
+                    <a-menu :default-selected-keys="[defaultActive]" :style="{ width: '200px', height: '100%' }"
+                        @menu-item-click="handleMenuClick">
+                        <!-- 动态菜单 -->
+                        <a-sub-menu v-for="menu in menuList" :key="menu.url">
+                            <template #icon>
+                                <component :is="getIconComponent(menu.icon)" style="font-size: 20px;" />
+                            </template>
+                            <template #title>{{ menu.menuName }}</template>
+
+                            <a-menu-item v-for="item in menu.children" :key="item.url">
                                 <template #icon>
                                     <component :is="getIconComponent(item.icon)" style="font-size: 20px;" />
                                 </template>
-                                <template #title>{{ item.menuName }}</template>
-                                <a-menu-item v-for="child in item.children" :key="child.menuId">
-                                    {{ child.menuName }}
-                                </a-menu-item>
-                            </a-sub-menu>
-                            <a-menu-item v-else>{{ item.menuName }}</a-menu-item>
-                        </template>
+                                {{ item.menuName }}
+                            </a-menu-item>
+                        </a-sub-menu>
                     </a-menu>
                 </div>
             </a-layout-sider>
@@ -48,13 +51,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useMenuStore, type MenuItem } from '@/store/menuStore'
 import * as ArcoIcons from '@arco-design/web-vue/es/icon'
 
 
 const router = useRouter()
+const route = useRoute()
+
 const menuStore = useMenuStore()
 
 const collapsed = ref(false)
@@ -66,23 +71,16 @@ const getIconComponent = (name: string) => {
 // 顶部菜单点击
 const handleTopMenuClick = (key: string) => router.push(key)
 
-// 侧边栏菜单点击
-const handleSiderClick = ({ key }: { key: string }) => {
-    const findUrl = (items: MenuItem[]): string | null => {
-        for (const item of items) {
-            if (item.menuId.toString() === key) return item.url || null
-            if (item.children?.length) {
-                const url = findUrl(item.children)
-                if (url) return url
-            }
-        }
-        return null
-    }
+const menuList = ref(menuStore.treeMenus)
 
-    const url = findUrl(menuStore.treeMenus)
-    if (url) router.push(url)
+// 默认高亮项 = 当前路由 path
+const defaultActive = computed(() => route.path)
+
+// 点击菜单（自动跳转）
+const handleMenuClick = (key: string) => {
+    console.log(router.getRoutes());
+    router.replace(key)
 }
-
 // 折叠回调
 const onCollapse = (val: boolean, type: 'clickTrigger' | 'responsive') => {
     collapsed.value = val

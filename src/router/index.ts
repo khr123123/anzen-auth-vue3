@@ -1,37 +1,53 @@
-﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+﻿import { createRouter, createWebHistory, type RouteRecordRaw, type RouteLocationNormalized } from 'vue-router'
+import Login from '@/views/Login.vue'
+import Layout from '@/layout/index.vue'
+import Home from '@/views/Home.vue'
+import About from '@/views/About.vue'
 
-// Layout 组件
-const MainLayout = () => import('@/layout/index.vue')
-// 页面组件
-const Home = () => import('@/views/Home.vue')
-const About = () => import('@/views/About.vue')
-
-const Login = () => import('@/views/Login.vue')
-
-// const UserList = () => import('@/views/UserList.vue')
-// const UserRole = () => import('@/views/UserRole.vue')
-// const Settings = () => import('@/views/Settings.vue')
-
+// 路由配置
 const routes: RouteRecordRaw[] = [
     {
+        path: '/login',
+        name: '登录',
+        component: Login,
+        meta: { title: '登录' },
+    },
+    {
         path: '/',
-        component: MainLayout, // Layout 作为父级路由
+        component: Layout,
+        name: 'Layout',
+        redirect: '/index',
         children: [
-            { path: '', component: Home },       // 默认首页
-            { path: 'about', component: About }, // /about 页面
-
-
-            // { path: 'user/list', component: UserList },
-            // { path: 'user/role', component: UserRole },
-            // { path: 'settings', component: Settings },
+            {
+                path: 'index', // 注意：子路由 path 不要加 `/`
+                name: '首页',
+                component: Home,
+                meta: { title: '首页' },
+            },
+            {
+                path: 'about',
+                name: '关于',
+                component: About,
+                meta: { title: '关于' },
+            },
         ],
     },
-    { path: '/login', component: Login }, // /about 页面
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes,
+    scrollBehavior(): { top: number } {
+        return { top: 0 } // 路由滚动行为
+    },
+})
+
+// 全局后置钩子设置标题
+router.afterEach((to: RouteLocationNormalized) => {
+    document.title = import.meta.env.VITE_TILTE as string
+    if (to.meta?.title) {
+        document.title += ' - ' + to.meta.title
+    }
 })
 
 export default router

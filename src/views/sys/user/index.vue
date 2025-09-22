@@ -66,7 +66,8 @@
         </a-table>
 
         <!-- 分配角色对话框 -->
-        <a-modal v-model:visible="grantRoleVisible" title="分配角色" @ok="submitGrantRole" :ok-loading="grantRoleLoading">
+        <a-modal v-model:visible="grantRoleVisible" width="300px" title="分配角色" @ok="submitGrantRole"
+            :ok-loading="grantRoleLoading">
             <a-spin :loading="roleLoading">
                 <a-checkbox-group v-model="selectedRoleIds" direction="vertical" style="width: 100%">
                     <a-checkbox v-for="role in allRoles" :key="role.roleId" :value="role.roleId">

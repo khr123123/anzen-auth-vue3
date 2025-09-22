@@ -7,4 +7,8 @@ import { RouterView } from 'vue-router';
 
 </script>
 
-<style></style>
+<style>
+.app {
+  background: var(--color-bg-1);
+}
+</style>

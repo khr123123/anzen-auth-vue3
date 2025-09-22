@@ -57,14 +57,15 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item label="权限标识" required>
-                            <a-input v-model="addForm.perms" placeholder="请输入权限标识" />
+                            <a-input v-model="addForm.perms" placeholder="例如：sys:user:query" />
                         </a-form-item>
                     </a-col>
                 </a-row>
+
                 <a-row :gutter="16">
                     <a-col :span="12">
                         <a-form-item label="路径" required>
-                            <a-input v-model="addForm.url" placeholder="请输入路径" />
+                            <a-input v-model="addForm.url" placeholder="例如：/sys/user/index" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
@@ -94,7 +95,7 @@ import { ref, reactive, onMounted, computed } from 'vue';
 import * as ArcoIcons from '@arco-design/web-vue/es/icon';
 import { getUserMenuTreeWithButton, saveMenu } from '@/api/sysMenuController';
 import { Message } from '@arco-design/web-vue';
-
+import { useMenuStore } from '@/store/menuStore';
 interface SysMenu {
     menuId: number;
     parentId: number;
@@ -106,6 +107,7 @@ interface SysMenu {
     children?: SysMenu[];
 }
 
+const menuStore = useMenuStore();
 const menuList = ref<SysMenu[]>([]);
 const expandedKeys = ref<number[]>([]);
 
@@ -136,6 +138,7 @@ const handleAddOk = () => {
         // 刷新表格数据
         fetchMenuList();
         Message.success('新增菜单成功');
+        menuStore.setMenus([])
     }).catch((error) => {
         Message.error('新增菜单失败!', error.message);
     })

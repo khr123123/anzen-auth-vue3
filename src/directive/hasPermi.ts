@@ -8,7 +8,7 @@ const permissionDirective: Directive = {
     const { value } = binding;
 
     const userStore = useUserStore();
-    const permissions: string[] = userStore.user?.permissions || [];
+    const permissions: string[] = userStore.userInfo?.permissions || [];
 
     if (value && Array.isArray(value) && value.length > 0) {
       const permissionFlag: string[] = value;

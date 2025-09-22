@@ -1,20 +1,54 @@
 ﻿<template>
     <a-layout style="min-height: 100vh">
         <!-- 顶部 Header -->
-        <a-layout-header style="display:flex; align-items:center; background:#fff; padding:0 24px; height:64px;">
+        <a-layout-header class="app-header">
             <header class="header" role="banner">
                 <img src="@/assets/logo.png" alt="ANZEN logo" class="logo" />
                 <div class="header-text">ANZEN</div>
             </header>
 
-            <a-menu mode="horizontal" :default-selected-keys="['/']" @menu-item-click="handleTopMenuClick"
-                style="margin-left:24px">
-                <a-menu-item key="/">Home</a-menu-item>
+            <a-menu :mode="'horizontal'" :selected-keys="[route.path]" @menu-item-click="handleTopMenuClick"
+                style="margin-left:24px;margin-right:24px;">
+                <a-menu-item key="/index">Home</a-menu-item>
                 <a-menu-item key="/about">About</a-menu-item>
             </a-menu>
 
-            <div style="margin-right:12px">
-                <a-avatar :size="45">A</a-avatar>
+            <!-- 顶部操作区 -->
+            <div style="display:flex; align-items:center; gap:12px;">
+                <!-- GitHub 按钮 -->
+                <a-button type="text" @click="goGithub">
+                    <template #icon>
+                        <IconGithub size="20px" />
+                    </template>
+                </a-button>
+                <!-- 主题切换 -->
+                <a-button type="text" @click="toggleTheme" title="切换主题">
+                    <template #icon>
+                        <IconMoon v-if="isDark" size="20px" />
+                        <IconSun v-else size="20px" />
+                    </template></a-button>
+
+                <!-- 用户头像下拉 -->
+                <a-dropdown trigger="click">
+                    <a-avatar :size="45" style="cursor:pointer">
+                        <template v-if="user?.avatar && isValidUrl(user?.avatar)">
+                            <img :src="user?.avatar" alt="avatar" />
+                        </template>
+                        <template v-else>
+                            {{ user?.name ? user?.name.charAt(0).toUpperCase() : "U" }}
+                        </template>
+                    </a-avatar>
+                    <template #content>
+                        <a-doption @click="goProfile">
+                            <template #icon><icon-user /></template>
+                            个人信息
+                        </a-doption>
+                        <a-doption @click="handleLogout">
+                            <template #icon><icon-export /></template>
+                            退出登录
+                        </a-doption>
+                    </template>
+                </a-dropdown>
             </div>
         </a-layout-header>
 
@@ -43,7 +77,7 @@
                 </div>
             </a-layout-sider>
 
-            <a-layout-content style="background:#fff; padding:16px;">
+            <a-layout-content class="content">
                 <router-view />
             </a-layout-content>
         </a-layout>
@@ -51,10 +85,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { h, ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMenuStore, type MenuItem } from '@/store/menuStore'
 import * as ArcoIcons from '@arco-design/web-vue/es/icon'
+import { getMenuInfo } from '@/api/sysMenuController'
+import { getRoleInfo } from '@/api/sysRoleController'
+import { getUserRouters } from '@/api/sysUserController'
+import { Message } from '@arco-design/web-vue'
+import { useUserStore } from '@/store/userStore'
+import { useTokenStore } from '@/store/tokenStore'
 
 
 const router = useRouter()
@@ -71,7 +111,28 @@ const getIconComponent = (name: string) => {
 // 顶部菜单点击
 const handleTopMenuClick = (key: string) => router.push(key)
 
-const menuList = ref(menuStore.treeMenus)
+const menuList = ref<any[]>([])
+
+const fetchMenuList = async () => {
+    try {
+        const menuRes = await getUserRouters()
+        if (menuRes.code === 0) {
+            menuStore.setMenus(menuRes.data) // 构建树并存储
+        }
+    } catch (error) {
+        console.error('获取菜单失败', error)
+    }
+}
+onMounted(() => {
+    if (!menuStore.treeMenus || menuStore.treeMenus.length === 0) {
+        // 如果 store 里没有数据，就去拉取
+        fetchMenuList()
+        menuList.value = menuStore.treeMenus
+    } else {
+        // 有数据直接用
+        menuList.value = menuStore.treeMenus
+    }
+})
 
 // 默认高亮项 = 当前路由 path
 const defaultActive = computed(() => route.path)
@@ -85,6 +146,44 @@ const handleMenuClick = (key: string) => {
 const onCollapse = (val: boolean, type: 'clickTrigger' | 'responsive') => {
     collapsed.value = val
 }
+
+const userStore = useUserStore();
+const tokenStore = useTokenStore()
+const user = userStore.userInfo!.user!
+
+/** 校验是否完整 URL */
+const isValidUrl = (url: string): boolean => {
+    try {
+        return Boolean(new URL(url));
+    } catch {
+        return false;
+    }
+};
+
+/** GitHub 跳转 */
+const goGithub = () => {
+    window.open("https://github.com/khr123123", "_blank");
+};
+
+/** 主题切换（简单示例） */
+const isDark = ref(false);
+const toggleTheme = () => {
+    isDark.value = !isDark.value;
+    document.body.setAttribute("arco-theme", isDark.value ? "dark" : "light");
+};
+
+/** 个人信息 */
+const goProfile = () => {
+    router.push("/profile");
+};
+
+/** 退出登录 */
+const handleLogout = () => {
+    userStore.clearUser();
+    tokenStore.clearToken();
+    Message.success("已退出登录");
+    router.push("/login");
+};
 </script>
 
 <style scoped>
@@ -92,29 +191,45 @@ const onCollapse = (val: boolean, type: 'clickTrigger' | 'responsive') => {
     box-sizing: border-box;
     width: 100%;
     height: calc(100vh - 64px);
-    background-color: var(--color-neutral-2);
+    background-color: var(--color-bg-1);
 }
 
 .header {
     display: flex;
     align-items: center;
     gap: 12px;
+    width: 260px;
     padding: 6px 10px;
     border-radius: 8px;
     backdrop-filter: blur(6px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.01);
+    background-color: var(--color-bg-2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
 }
 
 .logo {
-    width: 50px;
-    height: 44px;
+    margin-left: 20px;
+    width: 56px;
+    height: 46px;
     object-fit: contain;
 }
 
 .header-text {
     font-size: 20px;
     font-weight: 700;
-    color: var(--color-text-1, #165fdd);
+    color: var(--color-text-1);
     letter-spacing: 1px;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 0;
+    height: 64px;
+    background: var(--color-bg-1);
+}
+
+.content {
+    background: var(--color-bg-1);
+    padding: 12px 24px;
 }
 </style>

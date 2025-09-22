@@ -1,5 +1,5 @@
 ﻿<template>
-    <div>
+    <div class="app">
         <!-- 顶部操作栏 -->
         <div class="toolbar">
             <a-button type="primary" @click="openAddModal">

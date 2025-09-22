@@ -1,5 +1,5 @@
 ﻿<template>
-    <div class="container">
+    <div class="container app">
         <!-- 左上角 header -->
         <header class="header" role="banner">
             <img src="@/assets/logo.png" alt="ANZEN logo" class="logo" />
@@ -100,13 +100,8 @@ const rules = {
 }
 
 const handleSubmit = async () => {
-    try {
-        // 校验表单
-        await formRef.value?.validate()
-    } catch (err) {
-        return
-    }
-
+    const res = await formRef.value.validate()
+    if (res) return
     loading.value = true
     try {
         const result = await loginUser(form)

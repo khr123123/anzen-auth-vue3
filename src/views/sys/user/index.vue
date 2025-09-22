@@ -1,5 +1,5 @@
 ﻿<template>
-    <div class="user-page">
+    <div class="app">
         <!-- 搜索栏 + 添加用户按钮 -->
         <div class="search-bar">
             <a-space>

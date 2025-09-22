@@ -1,8 +1,8 @@
 ﻿<template>
-    <div class="home-page">
+    <div class="app">
         <!-- 顶部欢迎区 -->
-        <a-card class="welcome-card" bordered={false}>
-            <a-row align="center" justify="space-between">
+        <a-card class="welcome-card">
+            <a-row justify="space-between">
                 <a-col>
                     <h2 class="welcome-title">欢迎回来，管理员 👋</h2>
                     <p class="welcome-subtitle">今天也要元气满满地工作哦！</p>
@@ -20,31 +20,44 @@
                     <template #title>
                         <icon-user /> 用户总数
                     </template>
-                    <h2>1,280</h2>
+                    <a-statistic title="" :value="1280" show-group-separator />
                 </a-card>
             </a-col>
+
             <a-col :span="6">
                 <a-card hoverable>
                     <template #title>
                         <icon-bar-chart /> 今日访问
                     </template>
-                    <h2>856</h2>
+                    <a-statistic title="" :value="856" show-group-separator>
+                        <template #suffix>
+                            <icon-arrow-rise style="color:#0fbf60" />
+                        </template>
+                    </a-statistic>
                 </a-card>
             </a-col>
+
             <a-col :span="6">
                 <a-card hoverable>
                     <template #title>
-                        <icon-shopping-cart /> 订单数
+                        <icon-check /> 订单数
                     </template>
-                    <h2>320</h2>
+                    <a-statistic title="" :value="320" show-group-separator>
+                        <template #suffix>
+                            <icon-arrow-rise style="color:#165dff" />
+                        </template>
+                    </a-statistic>
                 </a-card>
             </a-col>
+
             <a-col :span="6">
                 <a-card hoverable>
                     <template #title>
                         <icon-check-circle /> 系统任务
                     </template>
-                    <h2>95%</h2>
+                    <a-statistic title="" :value="95" :precision="0" :value-style="{ color: '#0fbf60' }">
+                        <template #suffix>%</template>
+                    </a-statistic>
                 </a-card>
             </a-col>
         </a-row>
@@ -62,19 +75,19 @@
             <a-col :span="8">
                 <a-card title="快捷入口">
                     <a-space direction="vertical" style="width: 100%">
-                        <a-button type="primary" long icon="<icon-user-add />">新增用户</a-button>
-                        <a-button type="outline" long icon="<icon-settings />">系统设置</a-button>
-                        <a-button type="dashed" long icon="<icon-file />">查看日志</a-button>
+                        <a-button type="primary" long>新增用户</a-button>
+                        <a-button type="outline" long>系统设置</a-button>
+                        <a-button type="dashed" long>查看日志</a-button>
                     </a-space>
                 </a-card>
             </a-col>
         </a-row>
     </div>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import * as echarts from 'echarts'
+
 
 const chartRef = ref<HTMLDivElement>()
 

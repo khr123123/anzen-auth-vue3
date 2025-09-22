@@ -8,7 +8,7 @@ const roleDirective: Directive = {
     const { value } = binding;
 
     const userStore = useUserStore();
-    const roles: string[] = userStore.user?.roles || [];
+    const roles: string[] = userStore.userInfo?.roles || [];
 
     if (value && Array.isArray(value) && value.length > 0) {
       const roleFlag: string[] = value;

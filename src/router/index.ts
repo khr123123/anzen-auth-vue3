@@ -3,6 +3,7 @@ import Login from '@/views/Login.vue'
 import Layout from '@/layout/index.vue'
 import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
+import Profile from '@/views/Profile.vue'
 
 // 路由配置
 const routes: RouteRecordRaw[] = [
@@ -29,6 +30,12 @@ const routes: RouteRecordRaw[] = [
                 name: '关于',
                 component: About,
                 meta: { title: '关于' },
+            },
+             {
+                path: 'profile',
+                name: '个人中心',
+                component: Profile,
+                meta: { title: '个人中心' },
             },
         ],
     },

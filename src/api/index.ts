@@ -5,10 +5,12 @@
 import * as sysUserController from "./sysUserController";
 import * as sysRoleController from "./sysRoleController";
 import * as sysMenuController from "./sysMenuController";
-import * as bodycanshu from "./bodycanshu";
+import * as uploadController from "./uploadController";
+import * as sysOperaLogController from "./sysOperaLogController";
 export default {
   sysUserController,
   sysRoleController,
   sysMenuController,
-  bodycanshu,
+  uploadController,
+  sysOperaLogController,
 };

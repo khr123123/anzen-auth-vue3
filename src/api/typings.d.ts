@@ -17,6 +17,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListSysOperaLog = {
+    code?: number;
+    data?: SysOperaLog[];
+    message?: string;
+  };
+
   type BaseResponseListSysRole = {
     code?: number;
     data?: SysRole[];
@@ -41,6 +47,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageSysOperaLog = {
+    code?: number;
+    data?: PageSysOperaLog;
+    message?: string;
+  };
+
   type BaseResponsePageSysRole = {
     code?: number;
     data?: PageSysRole;
@@ -59,12 +71,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseSetString = {
-    code?: number;
-    data?: string[];
-    message?: string;
-  };
-
   type BaseResponseString = {
     code?: number;
     data?: string;
@@ -74,6 +80,12 @@ declare namespace API {
   type BaseResponseSysMenu = {
     code?: number;
     data?: SysMenu;
+    message?: string;
+  };
+
+  type BaseResponseSysOperaLog = {
+    code?: number;
+    data?: SysOperaLog;
     message?: string;
   };
 
@@ -98,6 +110,10 @@ declare namespace API {
   };
 
   type deleteUserParams = {
+    id: number;
+  };
+
+  type getLogInfoParams = {
     id: number;
   };
 
@@ -137,6 +153,10 @@ declare namespace API {
     roles?: string[];
   };
 
+  type logPageParams = {
+    page: PageSysOperaLog;
+  };
+
   type pageMenuParams = {
     page: PageSysMenu;
   };
@@ -147,6 +167,15 @@ declare namespace API {
 
   type PageSysMenu = {
     records?: SysMenu[];
+    pageNumber?: number;
+    pageSize?: number;
+    totalPage?: number;
+    totalRow?: number;
+    optimizeCountQuery?: boolean;
+  };
+
+  type PageSysOperaLog = {
+    records?: SysOperaLog[];
     pageNumber?: number;
     pageSize?: number;
     totalPage?: number;
@@ -190,6 +219,24 @@ declare namespace API {
     children?: SysMenu[];
   };
 
+  type SysOperaLog = {
+    operaId?: number;
+    title?: string;
+    businessType?: number;
+    method?: string;
+    requestMethod?: string;
+    operaName?: string;
+    operaUrl?: string;
+    operaIp?: string;
+    operaLocation?: string;
+    operaParam?: string;
+    jsonResult?: string;
+    status?: number;
+    errorMsg?: string;
+    operaTime?: string;
+    costTime?: number;
+  };
+
   type SysRole = {
     roleId?: number;
     roleName?: string;
@@ -208,10 +255,6 @@ declare namespace API {
     status?: string;
     createTime?: string;
     updateTime?: string;
-  };
-
-  type testMenuPerms1Params = {
-    userId: number;
   };
 
   type UserLoginDto = {

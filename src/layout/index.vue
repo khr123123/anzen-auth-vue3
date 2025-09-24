@@ -149,7 +149,7 @@ const onCollapse = (val: boolean, type: 'clickTrigger' | 'responsive') => {
 
 const userStore = useUserStore();
 const tokenStore = useTokenStore()
-const user = userStore.userInfo!.user!
+const user = computed(() => userStore.userInfo!.user!)
 
 /** 校验是否完整 URL */
 const isValidUrl = (url: string): boolean => {

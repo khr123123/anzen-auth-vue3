@@ -149,7 +149,7 @@ const onCollapse = (val: boolean, type: 'clickTrigger' | 'responsive') => {
 
 const userStore = useUserStore();
 const tokenStore = useTokenStore()
-const user = computed(() => userStore.userInfo!.user!)
+const user = computed(() => userStore.userInfo?.user || null)
 
 /** 校验是否完整 URL */
 const isValidUrl = (url: string): boolean => {
@@ -181,8 +181,9 @@ const goProfile = () => {
 const handleLogout = () => {
     userStore.clearUser();
     tokenStore.clearToken();
+    menuStore.clearMenus();
     Message.success("已退出登录");
-    router.push("/login");
+    router.replace("/login");
 };
 </script>
 

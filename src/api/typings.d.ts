@@ -65,6 +65,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseServer = {
+    code?: number;
+    data?: Server;
+    message?: string;
+  };
+
   type BaseResponseSetLong = {
     code?: number;
     data?: number[];
@@ -99,6 +105,32 @@ declare namespace API {
     code?: number;
     data?: SysUser;
     message?: string;
+  };
+
+  type CentralProcessor = {
+    logicalProcessors?: LogicalProcessor[];
+    processorCpuLoadTicks?: number[][];
+    systemCpuLoadTicks?: number[];
+    logicalProcessorCount?: number;
+    processorIdentifier?: ProcessorIdentifier;
+    physicalProcessorCount?: number;
+    physicalPackageCount?: number;
+    physicalProcessors?: PhysicalProcessor[];
+    maxFreq?: number;
+    contextSwitches?: number;
+    featureFlags?: string[];
+    interrupts?: number;
+    currentFreq?: number[];
+    processorCaches?: ProcessorCache[];
+  };
+
+  type Cpu = {
+    cpuNum?: number;
+    total?: number;
+    sys?: number;
+    used?: number;
+    wait?: number;
+    free?: number;
   };
 
   type deleteMenuParams = {
@@ -137,6 +169,14 @@ declare namespace API {
     id: number;
   };
 
+  type GlobalMemory = {
+    pageSize?: number;
+    available?: number;
+    total?: number;
+    virtualMemory?: VirtualMemory;
+    physicalMemory?: PhysicalMemory[];
+  };
+
   type grantPermissionParams = {
     id: number;
     permissions?: number[];
@@ -147,6 +187,28 @@ declare namespace API {
     roles?: number[];
   };
 
+  type Jvm = {
+    total?: number;
+    max?: number;
+    free?: number;
+    version?: string;
+    home?: string;
+    name?: string;
+    startTime?: string;
+    usage?: number;
+    used?: number;
+    runTime?: string;
+    inputArgs?: string;
+  };
+
+  type LogicalProcessor = {
+    processorNumber?: number;
+    physicalProcessorNumber?: number;
+    physicalPackageNumber?: number;
+    numaNode?: number;
+    processorGroup?: number;
+  };
+
   type LoginUserInfoVO = {
     user?: SysUser;
     permissions?: string[];
@@ -155,6 +217,13 @@ declare namespace API {
 
   type logPageParams = {
     page: PageSysOperaLog;
+  };
+
+  type Mem = {
+    total?: number;
+    used?: number;
+    free?: number;
+    usage?: number;
   };
 
   type pageMenuParams = {
@@ -203,6 +272,74 @@ declare namespace API {
 
   type pageUserParams = {
     page: PageSysUser;
+  };
+
+  type PhysicalMemory = {
+    bankLabel?: string;
+    capacity?: number;
+    clockSpeed?: number;
+    manufacturer?: string;
+    memoryType?: string;
+    partNumber?: string;
+    serialNumber?: string;
+  };
+
+  type PhysicalProcessor = {
+    physicalPackageNumber?: number;
+    physicalProcessorNumber?: number;
+    efficiency?: number;
+    idString?: string;
+  };
+
+  type ProcessorCache = {
+    level?: string;
+    associativity?: string;
+    lineSize?: number;
+    cacheSize?: number;
+    type?: "Unified" | "Instruction" | "Data" | "Trace";
+  };
+
+  type ProcessorIdentifier = {
+    processorID?: string;
+    cpu64bit?: boolean;
+    name?: string;
+    family?: string;
+    identifier?: string;
+    model?: string;
+    vendor?: string;
+    microarchitecture?: string;
+    stepping?: string;
+    vendorFreq?: number;
+  };
+
+  type Server = {
+    cpu?: Cpu;
+    mem?: Mem;
+    jvm?: Jvm;
+    sys?: Sys;
+    sysFiles?: SysFile[];
+    sysInfo?: Record<string, any>;
+    cpuInfo?: CentralProcessor;
+    jvmInfo?: Record<string, any>;
+    memInfo?: GlobalMemory;
+  };
+
+  type Sys = {
+    computerName?: string;
+    computerIp?: string;
+    userDir?: string;
+    osName?: string;
+    osArch?: string;
+  };
+
+  type SysFile = {
+    dirName?: string;
+    sysTypeName?: string;
+    typeName?: string;
+    total?: string;
+    free?: string;
+    used?: string;
+    usage?: number;
   };
 
   type SysMenu = {
@@ -260,5 +397,14 @@ declare namespace API {
   type UserLoginDto = {
     username?: string;
     password?: string;
+  };
+
+  type VirtualMemory = {
+    virtualInUse?: number;
+    swapTotal?: number;
+    swapPagesIn?: number;
+    swapUsed?: number;
+    virtualMax?: number;
+    swapPagesOut?: number;
   };
 }

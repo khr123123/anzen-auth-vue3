@@ -1,9 +1,11 @@
 ﻿import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { useTokenStore } from '@/store/tokenStore'
+import { Message } from '@arco-design/web-vue'
+import router from '@/router'
 
 // 创建 axios 实例
 const request: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api', //后端地址
+    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
     timeout: 10000,
     withCredentials: true
 })
@@ -27,18 +29,19 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     (response: AxiosResponse) => {
         const res = response.data
-        // if (res.code !== 200) {
-        //     // 这里可以做错误处理，比如跳转登录
-        //     console.error(res.message || '请求出错')
-        //     return Promise.reject(res)
-        // }
+        if (res.code == 40101) {
+            Message.warning(res.message)
+            return Promise.reject(res)
+        }
         return res
     },
     (error) => {
-        console.error('网络错误:', error)
+        if (error.response.data.code == 40100) {
+            Message.warning(error.response.data.message)
+            router.push('/login')
+            return
+        }
         return Promise.reject(error)
     }
 )
-
-
 export default request

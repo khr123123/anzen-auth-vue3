@@ -1,41 +1,42 @@
 ﻿<template>
     <div class="app">
-        <!-- 搜索栏 + 添加用户按钮 -->
+        <!-- Search bar + Add User button -->
         <div class="search-bar">
             <a-space>
-                <a-input-search v-model="searchKeyword" placeholder="请输入用户名或昵称" allow-clear @search="handleSearch"
-                    style="width: 300px" />
+                <a-input-search v-model="searchKeyword" placeholder="Enter username or nickname" allow-clear
+                    @search="handleSearch" style="width: 300px" />
                 <a-button type="primary" @click="openUserModal()">
                     <template #icon>
                         <icon-plus />
                     </template>
-                    添加用户</a-button>
+                    Add User
+                </a-button>
             </a-space>
         </div>
-        <!-- 表格 -->
+        <!-- Table -->
         <a-table :data="filteredUsers" row-key="userId" :scroll="{ y: 400 }">
             <template #columns>
-                <a-table-column title="用户名" data-index="username" />
-                <a-table-column title="昵称" data-index="nickname" />
-                <a-table-column title="头像">
+                <a-table-column title="Username" data-index="username"  width="90"/>
+                <a-table-column title="Nickname" data-index="nickname"  width="100"/>
+                <a-table-column title="Avatar" width="60">
                     <template #cell="{ record }">
                         <img :src="record.avatar" alt="avatar" style="width:32px;height:32px;border-radius:50%" />
                     </template>
                 </a-table-column>
-                <a-table-column title="邮箱" data-index="email" />
-                <a-table-column title="状态">
+                <a-table-column title="Email" data-index="email"  width="120"/>
+                <a-table-column title="Status" width="60">
                     <template #cell="{ record }">
                         <a-tag :color="record.status === '0' ? 'green' : 'red'">
-                            {{ record.status === '0' ? '正常' : '禁用' }}
+                            {{ record.status === '0' ? 'Active' : 'Disabled' }}
                         </a-tag>
                     </template>
                 </a-table-column>
-                <a-table-column title="创建时间">
+                <a-table-column title="Created At"  width="140">
                     <template #cell="{ record }">
                         {{ new Date(record.createTime).toLocaleString() }}
                     </template>
                 </a-table-column>
-                <a-table-column title="操作" :width="310">
+                <a-table-column title="Actions" :width="310">
                     <template #cell="{ record }">
                         <a-space>
                             <a-button type="primary" size="small" :disabled="record.userId === 1"
@@ -43,21 +44,21 @@
                                 <template #icon>
                                     <icon-edit />
                                 </template>
-                                编辑
+                                Edit
                             </a-button>
                             <a-button v-hasPermi="['sys:user:role']" type="dashed" size="small"
                                 :disabled="record.userId === 1" @click="handleGrantRole(record)">
                                 <template #icon>
                                     <icon-user-group />
                                 </template>
-                                分配角色
+                                Assign Role
                             </a-button>
                             <a-button type="outline" size="small" status="danger" :disabled="record.userId === 1"
                                 @click="handleDelete(record)">
                                 <template #icon>
                                     <icon-delete />
                                 </template>
-                                删除
+                                Del
                             </a-button>
                         </a-space>
                     </template>
@@ -65,35 +66,35 @@
             </template>
         </a-table>
 
-        <!-- 分配角色对话框 -->
-        <a-modal v-model:visible="grantRoleVisible" width="300px" title="分配角色" @ok="submitGrantRole"
+        <!-- Assign Role Modal -->
+        <a-modal v-model:visible="grantRoleVisible" width="300px" title="Assign Role" @ok="submitGrantRole"
             :ok-loading="grantRoleLoading">
             <a-spin :loading="roleLoading">
                 <a-checkbox-group v-model="selectedRoleIds" direction="vertical" style="width: 100%">
                     <a-checkbox v-for="role in allRoles" :key="role.roleId" :value="role.roleId">
-                        {{ role.roleName }}（{{ role.roleKey }}）
+                        {{ role.roleName }} ({{ role.roleKey }})
                     </a-checkbox>
                 </a-checkbox-group>
             </a-spin>
         </a-modal>
 
-        <!-- 新增 / 编辑用户对话框 -->
+        <!-- Add / Edit User Modal -->
         <a-modal v-model:visible="userModalVisible" :title="userModalTitle" @ok="submitUser"
             :ok-loading="userModalLoading">
             <a-form :model="userForm" layout="vertical">
-                <a-form-item label="用户名" field="username" required>
-                    <a-input v-model="userForm.username" placeholder="请输入用户名" />
+                <a-form-item label="Username" field="username" required>
+                    <a-input v-model="userForm.username" placeholder="Enter username" />
                 </a-form-item>
-                <a-form-item label="昵称" field="nickname">
-                    <a-input v-model="userForm.nickname" placeholder="请输入昵称" />
+                <a-form-item label="Nickname" field="nickname">
+                    <a-input v-model="userForm.nickname" placeholder="Enter nickname" />
                 </a-form-item>
-                <a-form-item label="邮箱" field="email">
-                    <a-input v-model="userForm.email" placeholder="请输入邮箱" />
+                <a-form-item label="Email" field="email">
+                    <a-input v-model="userForm.email" placeholder="Enter email" />
                 </a-form-item>
-                <a-form-item label="状态" field="status">
+                <a-form-item label="Status" field="status">
                     <a-select v-model="userForm.status">
-                        <a-option value="0">正常</a-option>
-                        <a-option value="1">禁用</a-option>
+                        <a-option value="0">Active</a-option>
+                        <a-option value="1">Disabled</a-option>
                     </a-select>
                 </a-form-item>
             </a-form>
@@ -110,7 +111,7 @@ import { Modal, Message } from '@arco-design/web-vue';
 const userList = ref<API.SysUser[]>([]);
 const searchKeyword = ref('');
 
-// 过滤后的用户列表
+// Filtered users
 const filteredUsers = computed(() => {
     if (!searchKeyword.value) return userList.value;
     return userList.value.filter(
@@ -120,22 +121,22 @@ const filteredUsers = computed(() => {
     );
 });
 
-// 删除
+// Delete
 const handleDelete = (record: API.SysUser) => {
     Modal.confirm({
-        title: '确认删除',
-        content: `确定要删除用户【${record.username}】吗？`,
-        okText: '删除',
-        cancelText: '取消',
+        title: 'Confirm Delete',
+        content: `Are you sure you want to delete user 【${record.username}】?`,
+        okText: 'Delete',
+        cancelText: 'Cancel',
         onOk: async () => {
-            // TODO: 调用后端删除接口
-            Message.success(`已删除用户：${record.username}`);
+            // TODO: call backend delete API
+            Message.success(`User deleted: ${record.username}`);
             userList.value = userList.value.filter((u) => u.userId !== record.userId);
         },
     });
 };
 
-// ================== 分配角色 ==================
+// ================== Assign Role ==================
 const grantRoleVisible = ref(false);
 const grantRoleLoading = ref(false);
 const roleLoading = ref(false);
@@ -155,7 +156,7 @@ const handleGrantRole = async (record: API.SysUser) => {
         const userRoleRes = await getUserRoles({ id: record.userId });
         selectedRoleIds.value = userRoleRes.data || [];
     } catch (e) {
-        Message.error('加载角色失败');
+        Message.error('Failed to load roles');
     } finally {
         roleLoading.value = false;
     }
@@ -166,27 +167,27 @@ const submitGrantRole = async () => {
     grantRoleLoading.value = true;
     try {
         await grantRole({ id: currentUserId.value, roles: selectedRoleIds.value });
-        Message.success('角色分配成功');
+        Message.success('Roles assigned successfully');
         grantRoleVisible.value = false;
     } catch (e) {
-        Message.error('角色分配失败');
+        Message.error('Failed to assign roles');
     } finally {
         grantRoleLoading.value = false;
     }
 };
 
-// ================== 新增 / 编辑用户 ==================
+// ================== Add / Edit User ==================
 const userModalVisible = ref(false);
-const userModalTitle = ref('新增用户');
+const userModalTitle = ref('Add User');
 const userModalLoading = ref(false);
 const userForm = ref<Partial<API.SysUser>>({});
 
 const openUserModal = (record?: API.SysUser) => {
     if (record) {
-        userModalTitle.value = '编辑用户';
+        userModalTitle.value = 'Edit User';
         userForm.value = { ...record };
     } else {
-        userModalTitle.value = '新增用户';
+        userModalTitle.value = 'Add User';
         userForm.value = { username: '', nickname: '', email: '', status: '0' };
     }
     userModalVisible.value = true;
@@ -196,26 +197,26 @@ const submitUser = async () => {
     userModalLoading.value = true;
     try {
         if (userForm.value.userId) {
-            // TODO: 调用后端更新接口
-            Message.success('用户更新成功');
+            // TODO: call backend update API
+            Message.success('User updated successfully');
             const index = userList.value.findIndex(u => u.userId === userForm.value.userId);
             if (index !== -1) userList.value[index] = { ...userForm.value } as API.SysUser;
         } else {
-            // TODO: 调用后端新增接口
-            Message.success('用户新增成功');
+            // TODO: call backend add API
+            Message.success('User added successfully');
             userList.value.push({ ...(userForm.value as API.SysUser), userId: Date.now() });
         }
         userModalVisible.value = false;
     } catch (e) {
-        Message.error('操作失败');
+        Message.error('Operation failed');
     } finally {
         userModalLoading.value = false;
     }
 };
 
-// 搜索
+// Search
 const handleSearch = () => {
-    console.log('搜索关键字：', searchKeyword.value);
+    console.log('Search keyword:', searchKeyword.value);
 };
 
 onMounted(async () => {

@@ -36,7 +36,7 @@ request.interceptors.response.use(
         return res
     },
     (error) => {
-        if (error.response.data.code == 40100) {
+        if (error.response?.data?.code == 40100) {
             Message.warning(error.response.data.message)
             router.push('/login')
             return

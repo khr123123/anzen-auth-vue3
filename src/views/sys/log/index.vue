@@ -1,15 +1,15 @@
 ﻿<template>
     <div class="log-page">
-        <!-- 日志表格 -->
+        <!-- Log Table -->
         <a-table :data="logList" :columns="columns" :pagination="false" row-key="operaId" :loading="loading" bordered>
-            <!-- 自定义状态列 -->
+            <!-- Custom Status Column -->
             <template #status="{ record }">
                 <a-tag :color="record.status === 0 ? 'green' : 'red'" size="small">
-                    {{ record.status === 0 ? '成功' : '失败' }}
+                    {{ record.status === 0 ? 'Success' : 'Failed' }}
                 </a-tag>
             </template>
         </a-table>
-        <!-- 分页 -->
+        <!-- Pagination -->
         <div class="pagination">
             <a-pagination :total="totalRow" :current="pageNumber" :page-size="pageSize" show-total show-page-size
                 @change="handlePageChange" @page-size-change="handlePageSizeChange" />
@@ -21,28 +21,28 @@
 import { ref, onMounted } from 'vue';
 import { logPage } from '@/api/sysOperaLogController';
 
-// 列定义
+// Table Columns
 const columns = [
     { title: 'ID', dataIndex: 'operaId', width: 80 },
-    { title: '标题', dataIndex: 'title', ellipsis: true, tooltip: true, width: 120 },
-    { title: '方法', dataIndex: 'method', ellipsis: true, tooltip: true },
-    { title: '请求方式', dataIndex: 'requestMethod', width: 100 },
-    { title: '操作人', dataIndex: 'operaName', width: 100 },
+    { title: 'Title', dataIndex: 'title', ellipsis: true, tooltip: true, width: 120 },
+    { title: 'Method', dataIndex: 'method', ellipsis: true, tooltip: true },
+    { title: 'Request Method', dataIndex: 'requestMethod', width: 100 },
+    { title: 'Operator', dataIndex: 'operaName', width: 100 },
     { title: 'URL', dataIndex: 'operaUrl', ellipsis: true, tooltip: true },
     { title: 'IP', dataIndex: 'operaIp', width: 80, ellipsis: true, tooltip: true },
-    { title: '位置', dataIndex: 'operaLocation', width: 90 },
-    { title: '状态', dataIndex: 'status', slotName: 'status', width: 100 },
-    { title: '耗时(ms)', dataIndex: 'costTime', width: 100 },
+    { title: 'Location', dataIndex: 'operaLocation', width: 90 },
+    { title: 'Status', dataIndex: 'status', slotName: 'status', width: 100 },
+    { title: 'Duration (ms)', dataIndex: 'costTime', width: 100 },
 ];
 
-// 状态
+// State
 const logList = ref<API.SysOperaLog[]>([]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const totalRow = ref(0);
 const loading = ref(false);
 
-// 请求数据
+// Fetch Data
 const fetchLogs = async () => {
     loading.value = true;
     try {
@@ -63,7 +63,7 @@ onMounted(() => {
     fetchLogs();
 });
 
-// 分页切换
+// Pagination Events
 const handlePageChange = (page: number) => {
     pageNumber.value = page;
     fetchLogs();

@@ -2,15 +2,15 @@
     <div class="app">
         <div class="toolbar">
             <a-button type="primary" v-hasPermi="['sys:menu:add']" @click="addModalVisible = true">
-                <template #icon> <icon-plus /></template>新增菜单</a-button>
+                <template #icon> <icon-plus /></template>Add Menu</a-button>
         </div>
         <a-table :data="menuList" row-key="menuId" :scroll="{ y: 350 }" v-model:expandedKeys="expandedKeys"
             show-empty-tree>
             <template #columns>
-                <a-table-column title="菜单名称" data-index="menuName"></a-table-column>
-                <a-table-column title="权限标识" data-index="perms"></a-table-column>
-                <a-table-column title="路径" data-index="url"></a-table-column>
-                <a-table-column title="类型">
+                <a-table-column title="MenuName" data-index="menuName"></a-table-column>
+                <a-table-column title="Permsission" data-index="perms"></a-table-column>
+                <a-table-column title="Url" data-index="url"></a-table-column>
+                <a-table-column title="Type">
                     <template #cell="{ record }">
                         <a-tag
                             :color="record.menuType === 'M' ? '#2db7f5' : record.menuType === 'C' ? '#87d068' : '#f50'">
@@ -18,14 +18,14 @@
                         </a-tag>
                     </template>
                 </a-table-column>
-                <a-table-column title="图标">
+                <a-table-column title="Icon">
                     <template #cell="{ record }">
                         <component v-if="record.icon" :is="getIconComponent(record.icon)" style="font-size: 18px;" />
                     </template>
                 </a-table-column>
-                <a-table-column title="操作">
+                <a-table-column title="Operation">
                     <template #cell="{ record }">
-                        <a-button @click="handleEdit(record)">编辑</a-button>
+                        <a-button @click="handleEdit(record)">Edit</a-button>
                     </template>
                 </a-table-column>
             </template>

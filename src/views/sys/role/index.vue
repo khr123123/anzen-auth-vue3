@@ -1,62 +1,63 @@
 ﻿<template>
     <div class="app">
-        <!-- 顶部操作栏 -->
+        <!-- Top Toolbar -->
         <div class="toolbar">
             <a-button type="primary" @click="openAddModal">
                 <template #icon>
                     <icon-plus />
                 </template>
-                新增角色
+                Add Role
             </a-button>
         </div>
 
-        <!-- 角色表格 -->
+        <!-- Role Table -->
         <a-table :data="roleList" row-key="roleId" :bordered="false">
             <template #columns>
-                <a-table-column title="角色名称" data-index="roleName" />
-                <a-table-column title="角色标识" data-index="roleKey" />
-                <a-table-column title="状态">
+                <a-table-column title="Role Name" data-index="roleName" />
+                <a-table-column title="Role Key" data-index="roleKey" />
+                <a-table-column title="Status">
                     <template #cell="{ record }">
                         <a-tag :type="record.status === '0' ? 'success' : 'danger'">
-                            {{ record.status === '0' ? '正常' : '禁用' }}
+                            {{ record.status === '0' ? 'Active' : 'Disabled' }}
                         </a-tag>
                     </template>
                 </a-table-column>
-                <a-table-column title="创建时间">
+                <a-table-column title="Created At">
                     <template #cell="{ record }">
                         {{ new Date(record.createTime).toLocaleString() }}
                     </template>
                 </a-table-column>
-                <a-table-column title="操作" align="center" :width="320">
+                <a-table-column title="Actions" align="center" :width="320">
                     <template #cell="{ record }">
                         <a-space>
-                            <!-- 编辑 -->
+                            <!-- Edit -->
                             <a-button v-hasPermi="['sys:role:edit']" type="dashed" size="small"
                                 @click="handleEdit(record)">
                                 <template #icon>
                                     <icon-edit />
                                 </template>
-                                编辑
+                                Edit
                             </a-button>
 
-                            <!-- 删除 -->
-                            <a-popconfirm content="确认删除该角色？" @ok="handleDelete(record)">
+                            <!-- Delete -->
+                            <a-popconfirm content="Are you sure you want to delete this role?"
+                                @ok="handleDelete(record)">
                                 <a-button v-hasPermi="['sys:role:delete']" type="dashed" size="small" status="danger"
                                     :disabled="record.roleId === 1">
                                     <template #icon>
                                         <icon-delete />
                                     </template>
-                                    删除
+                                    Delete
                                 </a-button>
                             </a-popconfirm>
 
-                            <!-- 分配权限 -->
+                            <!-- Assign Permissions -->
                             <a-button v-hasPermi="['sys:role:perm']" type="dashed" size="small" status="warning"
                                 @click="openPermModal(record)">
                                 <template #icon>
                                     <icon-lock />
                                 </template>
-                                分配权限
+                                Assign Permissions
                             </a-button>
                         </a-space>
                     </template>
@@ -64,26 +65,26 @@
             </template>
         </a-table>
 
-        <!-- 新增角色弹窗 -->
-        <a-modal v-model:visible="addModalVisible" title="新增角色" @ok="handleAddOk" @cancel="handleAddCancel">
+        <!-- Add Role Modal -->
+        <a-modal v-model:visible="addModalVisible" title="Add Role" @ok="handleAddOk" @cancel="handleAddCancel">
             <a-form :model="addForm" layout="vertical">
-                <a-form-item field="roleName" label="角色名称" required>
-                    <a-input v-model="addForm.roleName" placeholder="请输入角色名称" />
+                <a-form-item field="roleName" label="Role Name" required>
+                    <a-input v-model="addForm.roleName" placeholder="Enter role name" />
                 </a-form-item>
-                <a-form-item field="roleKey" label="角色标识" required>
-                    <a-input v-model="addForm.roleKey" placeholder="请输入角色标识" />
+                <a-form-item field="roleKey" label="Role Key" required>
+                    <a-input v-model="addForm.roleKey" placeholder="Enter role key" />
                 </a-form-item>
-                <a-form-item field="status" label="状态" required>
-                    <a-select v-model="addForm.status" placeholder="请选择状态">
-                        <a-option value="0">正常</a-option>
-                        <a-option value="1">禁用</a-option>
+                <a-form-item field="status" label="Status" required>
+                    <a-select v-model="addForm.status" placeholder="Select status">
+                        <a-option value="0">Active</a-option>
+                        <a-option value="1">Disabled</a-option>
                     </a-select>
                 </a-form-item>
             </a-form>
         </a-modal>
 
-        <!-- 分配权限弹窗 -->
-        <a-modal v-model:visible="permModalVisible" :title="`分配权限 - ${currentRole?.roleName || ''}`"
+        <!-- Assign Permissions Modal -->
+        <a-modal v-model:visible="permModalVisible" :title="`Assign Permissions - ${currentRole?.roleName || ''}`"
             :confirm-loading="permLoading" @ok="handlePermOk" @cancel="handlePermCancel" width="420px">
             <a-tree v-if="!permLoading" :data="menuTree" checkable v-model:checked-keys="checkedKeys"
                 :field-names="{ key: 'key', title: 'title', children: 'children' }" :default-expand-all="true"
@@ -100,7 +101,7 @@ import { Message } from '@arco-design/web-vue'
 
 const roleList = ref<API.SysRole[]>([])
 
-// ================= 新增角色 =================
+// ================= Add Role =================
 const addModalVisible = ref(false)
 const addForm = reactive<API.SysRole>({
     roleId: 0,
@@ -133,7 +134,7 @@ const resetAddForm = () => {
     addForm.createTime = new Date().toISOString()
 }
 
-// ================= 分配权限 =================
+// ================= Assign Permissions =================
 const permModalVisible = ref(false)
 const permLoading = ref(false)
 const currentRole = ref<API.SysRole | null>(null)
@@ -154,39 +155,33 @@ const openPermModal = async (record: API.SysRole) => {
     permLoading.value = true
     try {
         const res = await getRolePermission({ id: record.roleId })
-        // 转为字符串，保证 key 一致
+        // Convert to string for consistency
         checkedKeys.value = (res.data || []).map(String)
 
         const resTree = await listMenu2Tree()
         menuTree.value = convertBackendMenuToArco(resTree?.data || [])
-        console.log('checkedKeys', checkedKeys.value)
-        console.log('menuTree', menuTree.value)
     } finally {
         permLoading.value = false
     }
 }
 
-
 const convertBackendMenuToArco = (nodes: any[] = []): TreeNode[] =>
     nodes.map((n) => ({
         key: String(n.menuId),
-        title: `${n.menuName}  (${n.menuType == "M" ? '目录' : n.menuType == "C" ? '菜单' : '按钮'})`,
+        title: `${n.menuName} (${n.menuType == "M" ? 'Directory' : n.menuType == "C" ? 'Menu' : 'Button'})`,
         children: convertBackendMenuToArco(n.children || []),
         ...(n.perms ? { perms: n.perms } : {}),
     }))
 
 const handlePermOk = async () => {
-    console.log('保存角色权限', currentRole.value, checkedKeys.value)
-
     const res = await grantPermission({
         id: currentRole.value?.roleId,
         permissions: checkedKeys.value
     })
-    console.log('保存角色权限结果', res)
     if (res.code == 0) {
-        Message.success('保存角色权限成功!')
+        Message.success('Role permissions saved successfully!')
     } else {
-        Message.error('保存角色权限失败!')
+        Message.error('Failed to save role permissions!')
     }
     permModalVisible.value = false
 }
@@ -194,15 +189,15 @@ const handlePermCancel = () => {
     permModalVisible.value = false
 }
 
-// ================= 其他操作 =================
+// ================= Other Operations =================
 const handleEdit = (record: API.SysRole) => {
-    console.log('编辑角色', record)
+    console.log('Edit role', record)
 }
 const handleDelete = (record: API.SysRole) => {
     roleList.value = roleList.value.filter((r) => r.roleId !== record.roleId)
 }
 
-// ================= 初始化数据 =================
+// ================= Init Data =================
 onMounted(async () => {
     const res = await listRole()
     roleList.value = res.data || []

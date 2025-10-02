@@ -41,6 +41,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseMapStringObject = {
+    code?: number;
+    data?: Record<string, any>;
+    message?: string;
+  };
+
   type BaseResponsePageSysMenu = {
     code?: number;
     data?: PageSysMenu;
@@ -108,20 +114,20 @@ declare namespace API {
   };
 
   type CentralProcessor = {
-    logicalProcessors?: LogicalProcessor[];
+    logicalProcessorCount?: number;
+    physicalPackageCount?: number;
     processorCpuLoadTicks?: number[][];
     systemCpuLoadTicks?: number[];
-    logicalProcessorCount?: number;
-    processorIdentifier?: ProcessorIdentifier;
     physicalProcessorCount?: number;
-    physicalPackageCount?: number;
+    logicalProcessors?: LogicalProcessor[];
     physicalProcessors?: PhysicalProcessor[];
+    processorIdentifier?: ProcessorIdentifier;
     maxFreq?: number;
-    contextSwitches?: number;
     featureFlags?: string[];
-    interrupts?: number;
-    currentFreq?: number[];
     processorCaches?: ProcessorCache[];
+    currentFreq?: number[];
+    contextSwitches?: number;
+    interrupts?: number;
   };
 
   type Cpu = {
@@ -193,12 +199,6 @@ declare namespace API {
     free?: number;
     version?: string;
     home?: string;
-    name?: string;
-    startTime?: string;
-    usage?: number;
-    used?: number;
-    runTime?: string;
-    inputArgs?: string;
   };
 
   type LogicalProcessor = {
@@ -223,7 +223,6 @@ declare namespace API {
     total?: number;
     used?: number;
     free?: number;
-    usage?: number;
   };
 
   type pageMenuParams = {
@@ -302,9 +301,9 @@ declare namespace API {
   type ProcessorIdentifier = {
     processorID?: string;
     cpu64bit?: boolean;
+    identifier?: string;
     name?: string;
     family?: string;
-    identifier?: string;
     model?: string;
     vendor?: string;
     microarchitecture?: string;
@@ -319,9 +318,9 @@ declare namespace API {
     sys?: Sys;
     sysFiles?: SysFile[];
     sysInfo?: Record<string, any>;
-    cpuInfo?: CentralProcessor;
     jvmInfo?: Record<string, any>;
     memInfo?: GlobalMemory;
+    cpuInfo?: CentralProcessor;
   };
 
   type Sys = {
@@ -400,11 +399,11 @@ declare namespace API {
   };
 
   type VirtualMemory = {
-    virtualInUse?: number;
-    swapTotal?: number;
-    swapPagesIn?: number;
-    swapUsed?: number;
-    virtualMax?: number;
     swapPagesOut?: number;
+    swapUsed?: number;
+    swapTotal?: number;
+    virtualMax?: number;
+    virtualInUse?: number;
+    swapPagesIn?: number;
   };
 }

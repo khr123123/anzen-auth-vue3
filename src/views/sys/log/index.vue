@@ -82,6 +82,7 @@ const handlePageSizeChange = (size: number) => {
 }
 
 .pagination {
+    margin-top: -3px;
     padding-top: 6px;
 }
 </style>

@@ -59,6 +59,8 @@ margin-left:24px;margin-right:24px;">
                     <a-menu :default-selected-keys="[defaultActive]" :style="{ width: '200px', height: '100%' }"
                         @menu-item-click="handleMenuClick">
                         <!-- 动态菜单 -->
+                        <!-- 1. 不含外链接 -->
+                        <!--
                         <a-sub-menu v-for="menu in menuList" :key="menu.url">
                             <template #icon>
                                 <component :is="getIconComponent(menu.icon)" style="font-size: 20px;" />
@@ -72,6 +74,37 @@ margin-left:24px;margin-right:24px;">
                                 {{ item.menuName }}
                             </a-menu-item>
                         </a-sub-menu>
+                        -->
+                        <!-- 2. 含外链接 -->
+                        <template v-for="menu in menuList">
+                            <!-- 如果是外链 -->
+                            <a-menu-item v-if="menu.url && menu.url.startsWith('http')" :key="menu.url">
+                                <template #icon>
+                                    <component :is="getIconComponent(menu.icon)" style="font-size: 20px;" />
+                                </template>
+                                <a :href="menu.url" target="_blank">{{ menu.menuName }}</a>
+                            </a-menu-item>
+                            <!-- 如果有子菜单 -->
+                            <a-sub-menu v-else :key="menu.url">
+                                <template #icon>
+                                    <component :is="getIconComponent(menu.icon)" style="font-size: 20px;" />
+                                </template>
+                                <template #title>{{ menu.menuName }}</template>
+                                <!-- 子菜单循环 -->
+                                <a-menu-item v-for="item in menu.children" :key="item.url">
+                                    <template #icon>
+                                        <component :is="getIconComponent(item.icon)" style="font-size: 20px;" />
+                                    </template>
+                                    <!-- 子菜单外链 or 内链 -->
+                                    <template v-if="item.url && item.url.startsWith('http')">
+                                        <a :href="item.url" target="_blank">{{ item.menuName }}</a>
+                                    </template>
+                                    <template v-else>
+                                        {{ item.menuName }}
+                                    </template>
+                                </a-menu-item>
+                            </a-sub-menu>
+                        </template>
                     </a-menu>
                 </div>
             </a-layout-sider>
